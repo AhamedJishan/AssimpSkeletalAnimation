@@ -29,7 +29,9 @@ workspace "AssimpSkeletalAnimation"
         }
 
         links {
-            "assimp-vc143-mtd"
+            "assimp-vc143-mtd",
+            "opengl32",
+            "glfw3"
         }
 
         postbuildcommands {
