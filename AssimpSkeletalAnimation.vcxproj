@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\SkinnedMesh.h" />
     <ClInclude Include="src\stbi\stb_image.h" />
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
@@ -114,6 +115,7 @@
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\SkinnedMesh.cpp" />
     <ClCompile Include="src\stbi\stb_image.cpp" />
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
