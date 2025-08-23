@@ -20,6 +20,7 @@ public:
 	void Render();
 
 	int GetNumBones() const { return m_BoneNameToIndexMap.size(); }
+	void GetBoneTransforms(std::vector<glm::mat4>& transforms);
 
 private:	
 	bool InitFromScene(const aiScene* scene, const std::string& filename);
@@ -33,6 +34,8 @@ private:
 	void LoadMeshBones(int meshIndex, const aiMesh* mesh);
 	void LoadSingleBone(int meshIndex, const aiBone* bone);
 	int GetBoneId(const aiBone* bone);
+
+	void ReadNodeHierarchy(const aiNode* node, const glm::mat4& parentTransform);
 
 #define MAX_NUM_BONES_PER_VERTEX 4
 #define INVALID_MATERIAL 0xFFFFFFFF
@@ -84,12 +87,28 @@ private:
 		}
 	};
 
+	struct BoneInfo
+	{
+		glm::mat4 OffsetMatrix;
+		glm::mat4 FinalTransformation;
+
+		BoneInfo(const glm::mat4& offsetMatrix)
+		{
+			OffsetMatrix = offsetMatrix;
+			FinalTransformation = glm::mat4(0);
+		}
+	};
+
 private:
 	GLuint m_VAO;
 	GLuint m_Buffers[BufferType::NUM_BUFFERS] = { 0 };
 
+	Assimp::Importer m_Importer;
+	const aiScene* m_Scene = nullptr;
+
 	std::vector<BasicMeshEntry> m_Meshes;
 	std::vector<class Texture*> m_Textures;
+	std::vector<BoneInfo> m_BoneInfos;
 
 	std::vector<glm::vec3> m_Positions;
 	std::vector<glm::vec3> m_Normals;

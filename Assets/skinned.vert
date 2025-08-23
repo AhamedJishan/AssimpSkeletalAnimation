@@ -10,6 +10,9 @@ uniform mat4 uProjection;
 uniform mat4 uView;
 uniform mat4 uModel;
 
+const int MAX_BONES = 100;
+uniform mat4 uBones[MAX_BONES];
+
 out VS_OUT {
 	vec2 TexCoords;
 	vec3 Normal;
@@ -24,6 +27,13 @@ void main()
 	vs_out.BoneIds = aBoneIds;
 	vs_out.BoneWeights = aBoneWeights;
 
+	mat4 boneTransform = uBones[aBoneIds[0]] * aBoneWeights[0];
+	boneTransform += uBones[aBoneIds[1]] * aBoneWeights[1];
+	boneTransform += uBones[aBoneIds[2]] * aBoneWeights[2];
+	boneTransform += uBones[aBoneIds[3]] * aBoneWeights[3];
+
 	vec4 pos = vec4(aPos, 1);
+	pos = boneTransform * pos;
+
 	gl_Position = uProjection * uView * uModel * pos;
 }

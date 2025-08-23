@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
 		if(glfwGetKey(window, GLFW_KEY_ESCAPE))
 			break;
 
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader.Use();
@@ -77,6 +78,10 @@ int main(int argc, char* argv[])
 		shader.SetInt("uActiveBoneId", activeBoneId);
 
 		model = glm::rotate(model, glm::radians(0.05f), glm::vec3(0, 1, 0));
+
+		std::vector <glm::mat4> boneTransforms;
+		mesh->GetBoneTransforms(boneTransforms);
+		shader.SetMat4s("uBones", boneTransforms);
 
 		mesh->Render();
 
