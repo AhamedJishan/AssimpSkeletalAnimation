@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <string>
 #include <vector>
 #include <map>
@@ -20,7 +21,7 @@ public:
 	void Render();
 
 	int GetNumBones() const { return m_BoneNameToIndexMap.size(); }
-	void GetBoneTransforms(std::vector<glm::mat4>& transforms);
+	void GetBoneTransforms(double timeInSeconds, std::vector<glm::mat4>& transforms);
 
 private:	
 	bool InitFromScene(const aiScene* scene, const std::string& filename);
@@ -35,7 +36,15 @@ private:
 	void LoadSingleBone(int meshIndex, const aiBone* bone);
 	int GetBoneId(const aiBone* bone);
 
-	void ReadNodeHierarchy(const aiNode* node, const glm::mat4& parentTransform);
+	void ReadNodeHierarchy(double animationTimeInTicks, const aiNode* node, const glm::mat4& parentTransform);
+	const aiNodeAnim* FindNodeAnim(const aiAnimation* animation, const std::string& nodeName);
+
+	void CalcInterpolatedScaling(aiVector3D& outVector, double animationTimeInTicks, const aiNodeAnim* nodeAnim);
+	unsigned int FindScaling(double animationTimeInTicks, const aiNodeAnim* nodeAnim);
+	void CalcInterpolatedRotation(aiQuaternion& outQuaternion, double animationTimeInTicks, const aiNodeAnim* nodeAnim);
+	unsigned int FindRotation(double animationTimeInTicks, const aiNodeAnim* nodeAnim);
+	void CalcInterpolatedPosition(aiVector3D& outVector, double animationTimeInTicks, const aiNodeAnim* nodeAnim);
+	unsigned int FindPosition(double animationTimeInTicks, const aiNodeAnim* nodeAnim);
 
 #define MAX_NUM_BONES_PER_VERTEX 4
 #define INVALID_MATERIAL 0xFFFFFFFF

@@ -11,12 +11,13 @@
 #include "Mesh.h"
 #include "SkinnedMesh.h"
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
 
 int main(int argc, char* argv[])
 {
-	const char* filename = "Assets/archer/Hip Hop Dancing.dae";
+	const char* filename = "Assets/archer/textures/archer robot dance.fbx";
+	//const char* filename = "Assets/archer/Hip Hop Dancing.dae";
 
 	GLFWwindow* window;
 
@@ -27,7 +28,7 @@ int main(int argc, char* argv[])
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", glfwGetPrimaryMonitor(), NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -56,12 +57,17 @@ int main(int argc, char* argv[])
 
 	int activeBoneId = 0;
 
+	double startTime = glfwGetTime();
+	double currentTime = 0;
+
 	while (!glfwWindowShouldClose(window))
 	{
+		currentTime = glfwGetTime() - startTime;
+
 		if(glfwGetKey(window, GLFW_KEY_ESCAPE))
 			break;
 
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader.Use();
@@ -77,10 +83,10 @@ int main(int argc, char* argv[])
 
 		shader.SetInt("uActiveBoneId", activeBoneId);
 
-		model = glm::rotate(model, glm::radians(0.05f), glm::vec3(0, 1, 0));
+		//model = glm::rotate(model, glm::radians(0.05f), glm::vec3(0, 1, 0));
 
 		std::vector <glm::mat4> boneTransforms;
-		mesh->GetBoneTransforms(boneTransforms);
+		mesh->GetBoneTransforms(currentTime, boneTransforms);
 		shader.SetMat4s("uBones", boneTransforms);
 
 		mesh->Render();
